@@ -1,1 +1,4 @@
+English
+High Math II
 OOP in C++
+Schemotechnic

@@ -48,7 +48,7 @@ public:
 
 	//------------------------Constructors, destructors-------------------//
 	CPGAcalculator() {};
-	//CPGAcalculator(const char* disciplinesTXT, const char* studentsTXT);
+	CPGAcalculator(const char* disciplinesTXT, const char* studentsTXT);
 	~CPGAcalculator();
 private:
 	// Structure that has description about discipline: score, ECTS-credits

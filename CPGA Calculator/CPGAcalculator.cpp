@@ -9,6 +9,12 @@
 
 //------------------------Constructors, destructors-------------------//
 
+// Constructor has to place all of data from .txt files
+// in data structures
+CPGAcalculator::CPGAcalculator(const char* disciplinesTXT, const char* studentsTXT)
+{
+
+}
 // The main goal of destructor - is write all of data in files.txt
 CPGAcalculator::~CPGAcalculator()
 {
