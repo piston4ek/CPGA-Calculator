@@ -1,0 +1,2 @@
+Name of discipline            ECTS      Total Score
+OOP in C++                    3.0       96        

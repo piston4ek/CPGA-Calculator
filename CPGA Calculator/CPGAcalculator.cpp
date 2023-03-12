@@ -7,6 +7,45 @@
 
 #include "CPGAcalculator.h"
 
+//------------------------Constructors, destructors-------------------//
+
+// The main goal of destructor - is write all of data in files.txt
+CPGAcalculator::~CPGAcalculator()
+{
+	using std::ofstream;
+	using std::ios;
+	using std::cerr;
+	using std::copy;
+	using std::ostream_iterator;
+	using std::string;
+	using std::for_each;
+	// First step -- write all list of students in students.txt
+	ofstream studentsTXT("students.txt", ios::trunc);
+	if (!studentsTXT.is_open())
+	{
+		cerr << "Error openning students.txt file to overwrite data.\n"
+			<< "Program determinating...";
+		exit(EXIT_FAILURE);
+	}
+	copy(studentList.begin(), studentList.end(),
+		ostream_iterator<NameOfDiscipline, char>(studentsTXT, "\n"));
+	studentsTXT.close();
+	// Second step -- write all of disciplines in disciplines.txt
+	ofstream disciplinesTXT("disciplines.txt", ios::trunc);
+	if (!disciplinesTXT.is_open())
+	{
+		cerr << "Error openning disciplines.txt file to overwrite data.\n"
+			<< "Program determinating...";
+		exit(EXIT_FAILURE);
+	}
+	copy(disciplineList.begin(), disciplineList.end(),
+		ostream_iterator<NameOfDiscipline, char>(disciplinesTXT, "\n"));
+	disciplinesTXT.close();
+	// 3-rd step -- create all of files with each student name and content a grades
+	for_each(studentList.begin(), studentList.end(), 
+		[&](const NameOfStudent& student) {_createGradeFile(student); });
+}
+
 // This function read discipline list from disciplines.txt file
 // and set in disciplineList (set<NameOfDiscipline>);
 // return false, if file isn't oppening
@@ -54,7 +93,7 @@ void CPGAcalculator::setGradesOfStudent(const NameOfStudent& student)
 	auto stud = studentList.find(student);
 	if (stud == studentList.end())
 	{
-		std::cout << "Student with this name doesn't exist. "
+		std::cerr << "Student with this name doesn't exist. "
 			<< "Stop processing...\n";
 		return;
 	}
@@ -64,7 +103,7 @@ void CPGAcalculator::setGradesOfStudent(const NameOfStudent& student)
 		_setGradeList(grades, *it);
 	}
 	gradeListOfStudents[student] = grades;
-	_createGradeFile(student);
+	//_createGradeFile(student);
 }
 
 void CPGAcalculator::showStudentGrades(const NameOfStudent& student) const

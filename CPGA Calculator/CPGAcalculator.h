@@ -46,6 +46,10 @@ public:
 	void showStudentGrades(const NameOfStudent& student) const;
 	void showStudentList() const;
 
+	//------------------------Constructors, destructors-------------------//
+	CPGAcalculator() {};
+	//CPGAcalculator(const char* disciplinesTXT, const char* studentsTXT);
+	~CPGAcalculator();
 private:
 	// Structure that has description about discipline: score, ECTS-credits
 	struct Discipline
@@ -59,8 +63,8 @@ private:
 
 	// Private members
 	std::map<NameOfStudent, GradeList> gradeListOfStudents;
-	std::set<NameOfDiscipline> disciplineList;
 	std::set<NameOfStudent> studentList;
+	std::set<NameOfDiscipline> disciplineList;
 
 	// Privated helper functions
 	void _setGradeList(GradeList& gradeList, const NameOfDiscipline& title);
