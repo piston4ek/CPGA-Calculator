@@ -64,27 +64,19 @@ void CPGAcalculator::setGradesOfStudent(const NameOfStudent& student)
 		_setGradeList(grades, *it);
 	}
 	gradeListOfStudents[student] = grades;
+	_createGradeFile(student);
 }
 
 void CPGAcalculator::showStudentGrades(const NameOfStudent& student) const
 {
-	using namespace std;
 	auto it = gradeListOfStudents.find(student);
 	if (it == gradeListOfStudents.end())
 	{
-		std::cout << "Student with this name doesn't exist. "
+		std::cerr << "Student with this name doesn't exist. "
 			<< "Stop processing...\n";
 		return;
 	}
-	auto grades = it->second;
-	cout << left << setw(30) << "Name of discipline"
-		<< setw(10) << "ECTS" << setw(10) << "Total Score" << endl;
-	for (auto it = grades.begin(); it != grades.end(); ++it)
-	{
-		cout << left << fixed << setw(30) << it->first <<
-			setw(10) << setprecision(1) << it->second.ECTS_credit
-			<< setw(10) << it->second.score << endl;
-	}
+	_outGrades(it->second, std::cout);
 }
 
 void CPGAcalculator::_setGradeList(GradeList& gradeList, const NameOfDiscipline& title)
@@ -120,4 +112,38 @@ void CPGAcalculator::_setGradeList(GradeList& gradeList, const NameOfDiscipline&
 	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	// Initialization of new value
 	gradeList[title] = temp;
+}
+
+void CPGAcalculator::_createGradeFile(const NameOfStudent& student)
+{
+	auto it = gradeListOfStudents.find(student);
+	if (it == gradeListOfStudents.end())
+	{
+		std::cerr << "Error, cannot find grades of student.\n"
+			<< "Determinating program...";
+		exit(EXIT_FAILURE);
+	}
+	const std::string file_name = student + ".txt";
+	std::ofstream gradeFile(file_name, std::ios::trunc);	// clear file, if exist
+	if (!gradeFile.is_open())
+	{
+		std::cerr << "Error openning " << file_name << ". "
+			<< "Stop processing.\n";
+		return;
+	}
+	_outGrades(it->second, gradeFile);
+	gradeFile.close();
+}
+
+void CPGAcalculator::_outGrades(const GradeList& grades, std::ostream& out) const
+{
+	using namespace std;
+	out << left << setw(30) << "Name of discipline"
+		<< setw(10) << "ECTS" << setw(10) << "Total Score" << endl;
+	for (auto it = grades.begin(); it != grades.end(); ++it)
+	{
+		out << left << fixed << setw(30) << it->first <<
+			setw(10) << setprecision(1) << it->second.ECTS_credit
+			<< setw(10) << it->second.score << endl;
+	}
 }

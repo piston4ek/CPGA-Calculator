@@ -28,6 +28,7 @@ public:
 	// This function fill list of discipline from file in set of disciplines
 	bool setDisciplineList();
 	void addToDisciplineList(const NameOfDiscipline& title) { disciplineList.insert(title); }
+
 	// This function fill list of students from file students.txt
 	bool setStudentList();
 	void addStudent(const NameOfStudent& student) { studentList.insert(student); }
@@ -61,8 +62,14 @@ private:
 	std::set<NameOfDiscipline> disciplineList;
 	std::set<NameOfStudent> studentList;
 
-	// Privated functions
+	// Privated helper functions
 	void _setGradeList(GradeList& gradeList, const NameOfDiscipline& title);
+
+	// This function create or rewrite file with student grades,
+	// file should be named as a student and contents courses and grades
+	void _createGradeFile(const NameOfStudent& student);
+	
+	void _outGrades(const GradeList& grades, std::ostream& out) const;
 };
 
 //--------------------- Space for some inline functions------------------//
