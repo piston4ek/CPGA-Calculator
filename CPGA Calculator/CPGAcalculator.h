@@ -23,12 +23,11 @@ private:
 	// This field has a some typedefs
 	typedef std::string NameOfStudent;
 	typedef std::string NameOfDiscipline;
-	typedef int Score;			// score represents in scale 0-100
 
 public:
 	// This function fill list of discipline from file in set of disciplines
 	bool setDisciplineList();
-	void addToDisciplineList(const NameOfDiscipline& discipline) { disciplineList.insert(discipline); }
+	void addToDisciplineList(const NameOfDiscipline& title) { disciplineList.insert(title); }
 	// This function fill list of students from file students.txt
 	bool setStudentList();
 	void addStudent(const NameOfStudent& student) { studentList.insert(student); }
@@ -51,7 +50,7 @@ private:
 	struct Discipline
 	{
 		float ECTS_credit;
-		Score score;
+		int score;
 	};
 	// We will work with maps of Name Discipline to score & ects_credits
 	// and also with name student to his map of disciplines
@@ -63,7 +62,7 @@ private:
 	std::set<NameOfStudent> studentList;
 
 	// Privated functions
-	void _setGradeList(GradeList& gradeList, const NameOfDiscipline& discipline);
+	void _setGradeList(GradeList& gradeList, const NameOfDiscipline& title);
 };
 
 //--------------------- Space for some inline functions------------------//
