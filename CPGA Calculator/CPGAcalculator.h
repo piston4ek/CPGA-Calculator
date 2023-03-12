@@ -12,6 +12,8 @@
 #include <set>
 #include <fstream>
 #include <iostream>
+#include <algorithm>
+#include <iterator>
 
 // The main class of processs all CPGA
 class CPGAcalculator
@@ -19,6 +21,15 @@ class CPGAcalculator
 public:
 	// This function fill list of discipline from file in set of disciplines
 	bool getDisciplineList();
+
+	//-------------Is empty? methods ----------------------------------------//
+	bool isDisciplineListEmpty() const { return disciplineList.empty(); }
+	bool isStudentListEmpty() const { return studentList.empty(); }
+	//---------------------------------------------------------------------//
+	//
+	//----------------------- Show methods (in console)-------------------//
+	void showDisciplineList() const;
+	//---------------------------------------------------------------------//
 private:
 	// Some definitons of typedef, structus
 	typedef std::string NameOfStudent;
@@ -38,5 +49,21 @@ private:
 	std::map<NameOfStudent, GradeList> studentList;
 	std::set<NameOfDiscipline> disciplineList;
 };
+
+// Space for some inline functions
+inline void CPGAcalculator::showDisciplineList() const
+{
+	// If nothing to process
+	if (isDisciplineListEmpty())
+	{
+		std::cout << "Nothing to show.\n";
+	}
+	// Otherwise, copy in ostream flow
+	else
+	{
+		std::copy(disciplineList.begin(), disciplineList.end(),
+			std::ostream_iterator<NameOfDiscipline, char>(std::cout, "\n"));
+	}
+}
 
 #endif // ! CPGACALCULATOR_H_
