@@ -25,6 +25,17 @@ private:
 	typedef std::string NameOfStudent;
 	typedef std::string NameOfDiscipline;
 
+	// Structure that has description about discipline: score, ECTS-credits
+	struct Discipline
+	{
+		float ECTS_credit;
+		int score;
+	};
+
+	// We will work with maps of Name Discipline to score & ects_credits
+	// and also with name student to his map of disciplines
+	typedef std::map<NameOfDiscipline, Discipline> GradeList;
+
 public:
 	//-----------------------------Get methods----------------------------------//
 	//std::set<NameOfStudent> getStudentList() const { return studentList; }
@@ -59,16 +70,6 @@ public:
 	CPGAcalculator(const char* disciplinesTXT, const char* studentsTXT);
 	~CPGAcalculator();
 private:
-	// Structure that has description about discipline: score, ECTS-credits
-	struct Discipline
-	{
-		float ECTS_credit;
-		int score;
-	};
-	// We will work with maps of Name Discipline to score & ects_credits
-	// and also with name student to his map of disciplines
-	typedef std::map<NameOfDiscipline, Discipline> GradeList;
-
 	// Private members
 	std::map<NameOfStudent, GradeList> gradeListOfStudents;
 	std::set<NameOfStudent> studentList;
