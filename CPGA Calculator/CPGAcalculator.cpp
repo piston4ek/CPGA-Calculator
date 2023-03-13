@@ -250,6 +250,13 @@ CPGAcalculator::GradeList CPGAcalculator::_getGradeListFromFile(const NameOfStud
 			cerr << "(2 case)Invalid input, skip \"" << line << "\"\n";
 			exit(EXIT_FAILURE);
 		}
+		// If don't have discipline in list of disciplines, just skip
+		auto disc = disciplineList.find(title);
+		if (disc == disciplineList.end())
+		{
+			continue;		// skip
+		}
+		// Add to grade list
 		courses[title] = { ects,score };
 	}
 	return courses;
