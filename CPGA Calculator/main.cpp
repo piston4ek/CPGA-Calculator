@@ -7,14 +7,16 @@
 int main()
 {
 	using namespace std;
-	CPGAcalculator test("disciplines.txt", "students.txt");
+	CPGAcalculator test;
 	// We will try with constructor
-	//string name = "Yurii Krasniuk";
-	//test.addStudent(name);
-	//test.setDisciplineList();
+	string name = "Yurii Krasniuk";
+	string disc = "OOP in C++";
+	test.addStudent(name);
+	test.setDisciplineList();
+	test.addToDisciplineList(disc);
 	if (!test.isStudentListEmpty() && !test.isDisciplineListEmpty())
 	{
-		//test.setGradesOfStudent("Yurii Krasniuk");
+		test.setGradesOfStudent("Yurii Krasniuk");
 		cout << "Courses list:\n";
 		test.showDisciplineList();
 		cout << "Student list:\n";

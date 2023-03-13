@@ -31,7 +31,7 @@ public:
 	//std::set<NameOfDiscipline> getDisciplineList() const { return disciplineList; }
 
 	// This function fill list of discipline from file in set of disciplines
-	void setDisciplineList() { _readFromFileInSet("discilines.txt", disciplineList); }
+	void setDisciplineList() { _readFromFileInSet("disciplines.txt", disciplineList); }
 	void addToDisciplineList(const NameOfDiscipline& title) { disciplineList.insert(title); }
 
 	// This function fill list of students from file students.txt

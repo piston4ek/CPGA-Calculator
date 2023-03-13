@@ -154,7 +154,7 @@ void CPGAcalculator::_outGrades(const GradeList& grades, std::ostream& out) cons
 		<< setw(10) << "ECTS" << setw(10) << "Total Score" << endl;
 	for (auto it = grades.begin(); it != grades.end(); ++it)
 	{
-		out << left << fixed << setw(30) << it->first <<
+		out << left << fixed << setw(30) << it->first << '\t' <<
 			setw(10) << setprecision(1) << it->second.ECTS_credit
 			<< setw(10) << it->second.score << endl;
 	}
@@ -200,23 +200,21 @@ CPGAcalculator::GradeList CPGAcalculator::_getGradeListFromFile(const NameOfStud
 	// Read next data
 	while (getline(file, line))
 	{
-		istringstream ss(line);
+		stringstream ss(line);
 		string title;
 		float ects;
 		int score;
-		getline(ss, title, '\t');
+
+		if (!getline(ss, title, '\t'))
+		{
+			cerr << "(1 case)Invalid input, skip \"" << line << "\"\n";
+			exit(EXIT_FAILURE);
+		}
+
 		if (!(ss >> ects >> score) || ects < 0 || (score < 0 || score > 100))
 		{
-			cerr << "Invalid input, skip \"" << line << "\"\n";
-			continue;
-		}
-		// If we don't have a discipline in disciplineList case
-		auto disc = disciplineList.find(title);
-		if (disc == disciplineList.end())
-		{
-			cerr << '\"' << title << "\" no matches found in discipine list.\n"
-				<< "Skip \"" << line << "\"\n";
-			continue;
+			cerr << "(2 case)Invalid input, skip \"" << line << "\"\n";
+			exit(EXIT_FAILURE);
 		}
 		courses[title] = { ects,score };
 	}

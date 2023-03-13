@@ -1,5 +1,5 @@
 Name of discipline            ECTS      Total Score
-English                       2.5       85        
-High Math II                  3.0       95        
-OOP in C++                    3.0       96        
-Schemotechnic                 4.5       78        
+English                       	3.4       96        
+High Math II                  	3.5       44        
+OOP in C++                    	4.0       95        
+Schemotechnic                 	3.5       33        
