@@ -1,4 +1,6 @@
+Antennas and Propagation
 English
 High Math II
+Introduction to speciality
 OOP in C++
 Schemotechnic

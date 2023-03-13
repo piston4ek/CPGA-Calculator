@@ -1,5 +1,7 @@
-Name of discipline            ECTS      Total Score
-English                       	3.4       96        
-High Math II                  	3.5       44        
-OOP in C++                    	4.0       95        
-Schemotechnic                 	3.5       33        
+Name of discipline                      	ECTS      Total Score
+Antennas and Propagation                	3.5       78        
+English                                 	1.5       78        
+High Math II                            	5.0       95        
+Introduction to speciality              	2.5       97        
+OOP in C++                              	3.5       96        
+Schemotechnic                           	4.5       76        

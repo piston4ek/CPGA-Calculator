@@ -79,6 +79,40 @@ void CPGAcalculator::setGradesOfStudent(const NameOfStudent& student)
 	gradeListOfStudents[student] = grades;
 }
 
+void CPGAcalculator::setGrade(const NameOfStudent& student, const NameOfDiscipline& title,
+	float ects, int grade)
+{
+	// Many checks
+	{
+		// Check that we have the student in our list
+		auto stud = studentList.find(student);
+		if (stud == studentList.end())
+		{
+			std::cerr << "Student with this name doesn't exist. "
+				<< "Stop processing...\n";
+			return;
+		}
+		// Check if we have the that discipline
+		auto cours_name = disciplineList.find(title);
+		if (cours_name == disciplineList.end())
+		{
+			std::cerr << "Course with this title doesn't exist. "
+				<< "Stop processing...\n";
+			return;
+		}
+		// Check for correct input
+		if (ects < 0 || (grade < 0 || grade > 100))
+		{
+			std::cerr << "Bad input, something less 0 or more than 100."
+				<< "Stop processing...\n";
+			return;
+		}
+	}
+	// Set grade for student
+	auto grades = gradeListOfStudents.find(student)->second;
+	grades[title] = { ects,grade };
+}
+
 void CPGAcalculator::showStudentGrades(const NameOfStudent& student) const
 {
 	auto it = gradeListOfStudents.find(student);
@@ -150,11 +184,11 @@ void CPGAcalculator::_createGradeFile(const NameOfStudent& student)
 void CPGAcalculator::_outGrades(const GradeList& grades, std::ostream& out) const
 {
 	using namespace std;
-	out << left << setw(30) << "Name of discipline"
+	out << left << setw(40) << "Name of discipline" <<'\t'
 		<< setw(10) << "ECTS" << setw(10) << "Total Score" << endl;
 	for (auto it = grades.begin(); it != grades.end(); ++it)
 	{
-		out << left << fixed << setw(30) << it->first << '\t' <<
+		out << left << fixed << setw(40) << it->first << '\t' <<
 			setw(10) << setprecision(1) << it->second.ECTS_credit
 			<< setw(10) << it->second.score << endl;
 	}

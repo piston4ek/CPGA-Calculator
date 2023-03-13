@@ -40,6 +40,9 @@ public:
 
 	// Function that set grade list of student
 	void setGradesOfStudent(const NameOfStudent& student);
+	// Function set grade & ects by title of discipline and name of student
+	void setGrade(const NameOfStudent& student, const NameOfDiscipline& title,
+		float ects, int grade);
 
 	//-------------Is empty? methods ----------------------------------------//
 	bool isDisciplineListEmpty() const { return disciplineList.empty(); }
