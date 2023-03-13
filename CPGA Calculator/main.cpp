@@ -1,20 +1,26 @@
 #include "CPGAcalculator.h"
 #include <string>
 #include <iostream>
+#include <algorithm>
+#include <iterator>
 
 int main()
 {
 	using namespace std;
-	CPGAcalculator test;
-	string name = "Yurii Krasniuk";
-	test.addStudent(name);
-	test.setDisciplineList();
+	CPGAcalculator test("disciplines.txt", "students.txt");
+	// We will try with constructor
+	//string name = "Yurii Krasniuk";
+	//test.addStudent(name);
+	//test.setDisciplineList();
 	if (!test.isStudentListEmpty() && !test.isDisciplineListEmpty())
 	{
-		cout << "That disciplines you'll set:\n";
+		//test.setGradesOfStudent("Yurii Krasniuk");
+		cout << "Courses list:\n";
 		test.showDisciplineList();
-		cout << "for your student " << name << endl;
-		test.setGradesOfStudent(name);
+		cout << "Student list:\n";
+		test.showStudentList();
+		cout << "Grades of Krasniuk Yurii:\n";
+		test.showStudentGrades("Yurii Krasniuk");
 	}
 	else if (test.isStudentListEmpty())
 	{
@@ -24,6 +30,5 @@ int main()
 	{
 		cout << "Empty list of disciplines!\n";
 	}
-	test.showStudentGrades(name);
 	return 0;
 }

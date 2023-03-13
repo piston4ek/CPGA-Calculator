@@ -13,7 +13,16 @@
 // in data structures
 CPGAcalculator::CPGAcalculator(const char* disciplinesTXT, const char* studentsTXT)
 {
-
+	// Read from studentsTXT and place all of in studentList
+	_readFromFileInSet(studentsTXT, studentList);
+	// Read from disciplinesTXT
+	_readFromFileInSet(disciplinesTXT, disciplineList);
+	// Now the goal -- is copy from all of student_name_example.txt files info
+	// and place in gradeListOfStudents
+	for (auto name = studentList.begin(); name != studentList.end(); ++name)
+	{
+		gradeListOfStudents[*name] = _getGradeListFromFile(*name);
+	}
 }
 // The main goal of destructor - is write all of data in files.txt
 CPGAcalculator::~CPGAcalculator()
@@ -52,47 +61,6 @@ CPGAcalculator::~CPGAcalculator()
 		[&](const NameOfStudent& student) {_createGradeFile(student); });
 }
 
-// This function read discipline list from disciplines.txt file
-// and set in disciplineList (set<NameOfDiscipline>);
-// return false, if file isn't oppening
-bool CPGAcalculator::setDisciplineList()
-{
-	const char* file_name = "disciplines.txt";
-	std::ifstream input(file_name);
-	if (!input.is_open())
-	{
-		std::cerr << "Cannot open " << file_name
-			<< ".\tStop reading from file.\n";
-		return false;
-	}
-	NameOfDiscipline temp;
-	while (std::getline(input,temp))
-	{
-		disciplineList.insert(temp);
-	}
-	input.close();
-	return true;
-}
-
-bool CPGAcalculator::setStudentList()
-{
-	const char* file_name = "students.txt";
-	std::ifstream input(file_name);
-	if (!input.is_open())
-	{
-		std::cerr << "Cannot open " << file_name
-			<< ".\tStop reading from file.\n";
-		return false;
-	}
-	NameOfStudent temp;
-	while (std::getline(input, temp))
-	{
-		studentList.insert(temp);
-	}
-	input.close();
-	return true;
-}
-
 void CPGAcalculator::setGradesOfStudent(const NameOfStudent& student)
 {
 	// Check that we have the student in our list
@@ -109,7 +77,6 @@ void CPGAcalculator::setGradesOfStudent(const NameOfStudent& student)
 		_setGradeList(grades, *it);
 	}
 	gradeListOfStudents[student] = grades;
-	//_createGradeFile(student);
 }
 
 void CPGAcalculator::showStudentGrades(const NameOfStudent& student) const
@@ -191,4 +158,67 @@ void CPGAcalculator::_outGrades(const GradeList& grades, std::ostream& out) cons
 			setw(10) << setprecision(1) << it->second.ECTS_credit
 			<< setw(10) << it->second.score << endl;
 	}
+}
+
+void CPGAcalculator::_readFromFileInSet(const char* file_name, std::set<std::string>& someList)
+{
+	using namespace std;
+	ifstream file;
+	// Openning file.txt
+	file.open(file_name);
+	if (!file.is_open())
+	{
+		cerr << "Error oppening and reading " << file_name << " file.\n"
+			<< "Error exit\n";
+		exit(EXIT_FAILURE);
+	}
+	// Copy in someList(set<string>) from file.txt
+	string line;
+	while (getline(file,line))
+	{
+		someList.insert(line);
+	}
+	file.close();
+}
+
+CPGAcalculator::GradeList CPGAcalculator::_getGradeListFromFile(const NameOfStudent& name)
+{
+	using namespace std;
+	// Open a file with grades of student_name
+	const string file_name = name + ".txt";
+	ifstream file(file_name);
+	if (!file.is_open())
+	{
+		cerr << "Error openning " << file_name << ". "
+			<< "Stop Program.\n";
+		exit(EXIT_FAILURE);
+	}
+	GradeList courses;
+	string line;
+	// Skip first line with "Name of Discipline	ECTS Score..."
+	getline(file, line);
+	// Read next data
+	while (getline(file, line))
+	{
+		istringstream ss(line);
+		string title;
+		float ects;
+		int score;
+		getline(ss, title, '\t');
+		if (!(ss >> ects >> score) || ects < 0 || (score < 0 || score > 100))
+		{
+			cerr << "Invalid input, skip \"" << line << "\"\n";
+			continue;
+		}
+		// If we don't have a discipline in disciplineList case
+		auto disc = disciplineList.find(title);
+		if (disc == disciplineList.end())
+		{
+			cerr << '\"' << title << "\" no matches found in discipine list.\n"
+				<< "Skip \"" << line << "\"\n";
+			continue;
+		}
+		courses[title] = { ects,score };
+	}
+	return courses;
 }

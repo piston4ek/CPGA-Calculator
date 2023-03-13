@@ -13,6 +13,7 @@
 #include <fstream>
 #include <iostream>
 #include <iomanip>
+#include <sstream>
 #include <algorithm>
 #include <iterator>
 
@@ -25,12 +26,16 @@ private:
 	typedef std::string NameOfDiscipline;
 
 public:
+	//-----------------------------Get methods----------------------------------//
+	//std::set<NameOfStudent> getStudentList() const { return studentList; }
+	//std::set<NameOfDiscipline> getDisciplineList() const { return disciplineList; }
+
 	// This function fill list of discipline from file in set of disciplines
-	bool setDisciplineList();
+	void setDisciplineList() { _readFromFileInSet("discilines.txt", disciplineList); }
 	void addToDisciplineList(const NameOfDiscipline& title) { disciplineList.insert(title); }
 
 	// This function fill list of students from file students.txt
-	bool setStudentList();
+	void setStudentList() { _readFromFileInSet("students.txt", studentList); }
 	void addStudent(const NameOfStudent& student) { studentList.insert(student); }
 
 	// Function that set grade list of student
@@ -74,6 +79,10 @@ private:
 	void _createGradeFile(const NameOfStudent& student);
 	
 	void _outGrades(const GradeList& grades, std::ostream& out) const;
+
+	void _readFromFileInSet(const char* file_name, std::set<std::string>& someList);
+
+	GradeList _getGradeListFromFile(const NameOfStudent& name);
 };
 
 //--------------------- Space for some inline functions------------------//
