@@ -188,9 +188,19 @@ void CPGAcalculator::_outGrades(const GradeList& grades, std::ostream& out) cons
 		<< setw(10) << "ECTS" << setw(10) << "Total Score" << endl;
 	for (auto it = grades.begin(); it != grades.end(); ++it)
 	{
-		out << left << fixed << setw(40) << it->first << '\t' <<
-			setw(10) << setprecision(1) << it->second.ECTS_credit
-			<< setw(10) << it->second.score << endl;
+		// Check if we haven't some discipline in discipline list
+		auto disc = disciplineList.find(it->first);
+		if (disc == disciplineList.end())
+		{
+			continue;
+		}
+		// Otherwise, we can out this course
+		else
+		{
+			out << left << fixed << setw(40) << it->first << '\t' <<
+				setw(10) << setprecision(1) << it->second.ECTS_credit
+				<< setw(10) << it->second.score << endl;
+		}
 	}
 }
 

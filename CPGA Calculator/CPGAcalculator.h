@@ -51,6 +51,7 @@ public:
 	// This function fill list of students from file students.txt
 	void setStudentList() { _readFromFileInSet("students.txt", studentList); }
 	void addStudent(const NameOfStudent& student) { studentList.insert(student); }
+	void removeStudent(const NameOfStudent& student) { studentList.erase(student); }
 
 	// Function that set grade list of student
 	void setGradesOfStudent(const NameOfStudent& student);
