@@ -37,10 +37,7 @@ private:
 	typedef std::map<NameOfDiscipline, Discipline> GradeList;
 
 public:
-	//-----------------------------Get methods----------------------------------//
-	//std::set<NameOfStudent> getStudentList() const { return studentList; }
-	//std::set<NameOfDiscipline> getDisciplineList() const { return disciplineList; }
-
+	//-------------------------------- Count methods-----------------------------//
 	size_t countOfStudents() const { return studentList.size(); }
 	size_t countOfDisciplines () const { return disciplineList.size(); }
 
