@@ -56,11 +56,13 @@ public:
 	void setGrade(const NameOfStudent& student, const NameOfDiscipline& title,
 		float ects, int grade);
 
-	//-------------Is empty? methods ----------------------------------------//
+	//-------------Is ... ? methods ----------------------------------------//
 	bool isDisciplineListEmpty() const { return disciplineList.empty(); }
 	bool isStudentListEmpty() const { return studentList.empty(); }
 	bool isGradListOfStudentEmpty() const { return gradeListOfStudents.empty(); }
-
+	bool isHaveGradeList(const NameOfStudent& student) const;
+	bool isStudentExitst(const NameOfStudent& student) const;
+	bool isDisciplineExist(const NameOfDiscipline& disc) const;
 	//----------------------- Show methods (in console)-------------------//
 	void showDisciplineList() const;	
 	void showStudentGrades(const NameOfStudent& student) const;
@@ -118,6 +120,24 @@ inline void CPGAcalculator::showStudentList() const
 		std::copy(studentList.begin(), studentList.end(),
 			std::ostream_iterator<NameOfDiscipline, char>(std::cout, "\n"));
 	}
+}
+
+inline bool CPGAcalculator::isHaveGradeList(const NameOfStudent& student) const
+{
+	auto it = gradeListOfStudents.find(student);
+	return (it != gradeListOfStudents.end()) ? true : false;
+}
+
+inline bool CPGAcalculator::isStudentExitst(const NameOfStudent& student) const
+{
+	auto it = studentList.find(student);
+	return (it != studentList.end()) ? true : false;
+}
+
+inline bool CPGAcalculator::isDisciplineExist(const NameOfDiscipline& disc) const
+{
+	auto it = disciplineList.find(disc);
+	return (it != disciplineList.end()) ? true : false;
 }
 
 #endif // ! CPGACALCULATOR_H_

@@ -57,15 +57,14 @@ CPGAcalculator::~CPGAcalculator()
 		ostream_iterator<NameOfDiscipline, char>(disciplinesTXT, "\n"));
 	disciplinesTXT.close();
 	// 3-rd step -- create all of files with each student name and content a grades
-	for_each(studentList.begin(), studentList.end(), 
+	for_each(studentList.begin(), studentList.end(),
 		[&](const NameOfStudent& student) {_createGradeFile(student); });
 }
 
 void CPGAcalculator::setGradesOfStudent(const NameOfStudent& student)
 {
 	// Check that we have the student in our list
-	auto stud = studentList.find(student);
-	if (stud == studentList.end())
+	if (!isStudentExitst(student))
 	{
 		std::cerr << "Student with this name doesn't exist. "
 			<< "Stop processing...\n";
@@ -83,45 +82,58 @@ void CPGAcalculator::setGrade(const NameOfStudent& student, const NameOfDiscipli
 	float ects, int grade)
 {
 	// Many checks
-	{
-		// Check that we have the student in our list
-		auto stud = studentList.find(student);
-		if (stud == studentList.end())
-		{
-			std::cerr << "Student with this name doesn't exist. "
-				<< "Stop processing...\n";
-			return;
-		}
-		// Check if we have the that discipline
-		auto cours_name = disciplineList.find(title);
-		if (cours_name == disciplineList.end())
-		{
-			std::cerr << "Course with this title doesn't exist. "
-				<< "Stop processing...\n";
-			return;
-		}
-		// Check for correct input
-		if (ects < 0 || (grade < 0 || grade > 100))
-		{
-			std::cerr << "Bad input, something less 0 or more than 100."
-				<< "Stop processing...\n";
-			return;
-		}
-	}
-	// Set grade for student
-	auto grades = gradeListOfStudents.find(student)->second;
-	grades[title] = { ects,grade };
-}
-
-void CPGAcalculator::showStudentGrades(const NameOfStudent& student) const
-{
-	auto it = gradeListOfStudents.find(student);
-	if (it == gradeListOfStudents.end())
+	// 
+	// Check that we have the student in our list
+	if (!isStudentExitst(student))
 	{
 		std::cerr << "Student with this name doesn't exist. "
 			<< "Stop processing...\n";
 		return;
 	}
+	// Check if we have the that discipline
+	if (!isDisciplineExist(title))
+	{
+		std::cerr << "Course with this title doesn't exist. "
+			<< "Stop processing...\n";
+		return;
+	}
+	// Check for correct input
+	if (ects < 0 || (grade < 0 || grade > 100))
+	{
+		std::cerr << "Bad input, something less 0 or more than 100."
+			<< "Stop processing...\n";
+		return;
+	}
+	// Set grade for student,
+	// but before we need check if we have a gradeList for student
+	if (isHaveGradeList(student))
+	{
+		auto grades = gradeListOfStudents.find(student)->second;
+		grades[title] = { ects,grade };
+	}
+	else
+	{
+		GradeList temp;
+		temp[title] = { ects,grade };
+		gradeListOfStudents[student] = temp;
+	}
+}
+
+void CPGAcalculator::showStudentGrades(const NameOfStudent& student) const
+{
+	if (!isStudentExitst(student))
+	{
+		std::cerr << "Student with this name doesn't exist. "
+			<< "Stop processing...\n";
+		return;
+	}
+	if (!isHaveGradeList(student))
+	{
+		std::cerr << "Grade list for this student doesn't exist. "
+			<< "Stop processing...\n";
+		return;
+	}
+	auto it = gradeListOfStudents.find(student);
 	_outGrades(it->second, std::cout);
 }
 
@@ -137,7 +149,7 @@ void CPGAcalculator::_setGradeList(GradeList& gradeList, const NameOfDiscipline&
 	cout << "score(0-100): ";
 	cin >> temp.score;
 	// bad input or not in range
-	while (!cin||(temp.score < 0 || temp.score > 100))
+	while (!cin || (temp.score < 0 || temp.score > 100))
 	{
 		cin.clear();
 		cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -154,7 +166,7 @@ void CPGAcalculator::_setGradeList(GradeList& gradeList, const NameOfDiscipline&
 		cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		cout << "ECTS-credits(>0): ";
 		cin >> temp.ECTS_credit;
-	} 
+	}
 	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	// Initialization of new value
 	gradeList[title] = temp;
@@ -162,8 +174,7 @@ void CPGAcalculator::_setGradeList(GradeList& gradeList, const NameOfDiscipline&
 
 void CPGAcalculator::_createGradeFile(const NameOfStudent& student)
 {
-	auto it = gradeListOfStudents.find(student);
-	if (it == gradeListOfStudents.end())
+	if (!isHaveGradeList(student))
 	{
 		std::cerr << "Error, cannot find grades of student.\n"
 			<< "Determinating program...";
@@ -177,6 +188,7 @@ void CPGAcalculator::_createGradeFile(const NameOfStudent& student)
 			<< "Stop processing.\n";
 		return;
 	}
+	auto it = gradeListOfStudents.find(student);
 	_outGrades(it->second, gradeFile);
 	gradeFile.close();
 }
@@ -184,13 +196,12 @@ void CPGAcalculator::_createGradeFile(const NameOfStudent& student)
 void CPGAcalculator::_outGrades(const GradeList& grades, std::ostream& out) const
 {
 	using namespace std;
-	out << left << setw(40) << "Name of discipline" <<'\t'
+	out << left << setw(40) << "Name of discipline" << '\t'
 		<< setw(10) << "ECTS" << setw(10) << "Total Score" << endl;
 	for (auto it = grades.begin(); it != grades.end(); ++it)
 	{
 		// Check if we haven't some discipline in discipline list
-		auto disc = disciplineList.find(it->first);
-		if (disc == disciplineList.end())
+		if (!isDisciplineExist(it->first))
 		{
 			continue;
 		}
@@ -218,7 +229,7 @@ void CPGAcalculator::_readFromFileInSet(const char* file_name, std::set<std::str
 	}
 	// Copy in someList(set<string>) from file.txt
 	string line;
-	while (getline(file,line))
+	while (getline(file, line))
 	{
 		someList.insert(line);
 	}
@@ -261,13 +272,15 @@ CPGAcalculator::GradeList CPGAcalculator::_getGradeListFromFile(const NameOfStud
 			exit(EXIT_FAILURE);
 		}
 		// If don't have discipline in list of disciplines, just skip
-		auto disc = disciplineList.find(title);
-		if (disc == disciplineList.end())
+		if (!isDisciplineExist(title))
 		{
 			continue;		// skip
 		}
 		// Add to grade list
-		courses[title] = { ects,score };
+		else
+		{
+			courses[title] = { ects,score };
+		}
 	}
 	return courses;
 }
