@@ -40,7 +40,7 @@ public:
 	//-------------------------------- Count methods-----------------------------//
 	size_t countOfStudents() const { return studentList.size(); }
 	size_t countOfDisciplines () const { return disciplineList.size(); }
-
+	size_t countOfGrades(const NameOfStudent& student) const;
 	// This function fill list of discipline from file in set of disciplines
 	void setDisciplineList() { _readFromFileInSet("disciplines.txt", disciplineList); }
 	void addToDisciplineList(const NameOfDiscipline& title) { disciplineList.insert(title); }
@@ -67,7 +67,8 @@ public:
 	void showDisciplineList() const;	
 	void showStudentGrades(const NameOfStudent& student) const;
 	void showStudentList() const;
-
+	void showStudentsWithGrades() const;
+	void showStudentsWithoutGrades() const;
 	//------------------------Constructors, destructors-------------------//
 	CPGAcalculator() {};
 	CPGAcalculator(const char* disciplinesTXT, const char* studentsTXT);
@@ -140,4 +141,32 @@ inline bool CPGAcalculator::isDisciplineExist(const NameOfDiscipline& disc) cons
 	return (it != disciplineList.end()) ? true : false;
 }
 
+inline void CPGAcalculator::showStudentsWithGrades() const
+{
+	// If nothing to process
+	if (isDisciplineListEmpty() || isStudentListEmpty())
+	{
+		std::cout << "Nothing to show.\n";
+	}
+	else
+	{
+		std::copy_if(studentList.begin(), studentList.end(),
+			std::ostream_iterator<NameOfStudent, char>(std::cout, "\n"),
+			isHaveGradeList);
+	}
+}
+inline void CPGAcalculator::showStudentsWithoutGrades() const
+{
+	// If nothing to process
+	if (isDisciplineListEmpty() || isStudentListEmpty())
+	{
+		std::cout << "Nothing to show.\n";
+	}
+	else
+	{
+		std::copy_if(studentList.begin(), studentList.end(),
+			std::ostream_iterator<NameOfStudent, char>(std::cout, "\n"),
+			!isHaveGradeList);
+	}
+}
 #endif // ! CPGACALCULATOR_H_

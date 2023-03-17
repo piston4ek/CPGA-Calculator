@@ -61,6 +61,26 @@ CPGAcalculator::~CPGAcalculator()
 		[&](const NameOfStudent& student) {_createGradeFile(student); });
 }
 
+size_t CPGAcalculator::countOfGrades(const NameOfStudent& student) const
+{
+	if (!isStudentExitst(student))
+	{
+		std::cerr << "This student doesn't exist in list. "
+			<< "Stop processing.\n";
+		return -1;
+	}
+	else if (!isHaveGradeList(student))
+	{
+		std::cerr<<"This student doesn't have a grades. "
+			<< "Stop processing.\n";
+		return 0;
+	}
+	else
+	{
+		return gradeListOfStudents.find(student)->second.size();
+	}
+}
+
 void CPGAcalculator::setGradesOfStudent(const NameOfStudent& student)
 {
 	// Check that we have the student in our list
@@ -186,7 +206,7 @@ void CPGAcalculator::_createGradeFile(const NameOfStudent& student)
 	{
 		std::cerr << "Error openning " << file_name << ". "
 			<< "Stop processing.\n";
-		return;
+		exit(EXIT_FAILURE);
 	}
 	auto it = gradeListOfStudents.find(student);
 	_outGrades(it->second, gradeFile);
