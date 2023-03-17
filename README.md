@@ -1,3 +1,3 @@
 # CPGA-Calculator
-Project of student’s cumulative grade point average(CPGA). You as a student input your title of disciplines, ECTS credits, score etc. 
-Program will show average score, out all information etc.
+Project of student’s cumulative grade point average(CPGA). You can input student names, his scores for disciplines. This program work with simple file i/o streams
+(.txt files)
